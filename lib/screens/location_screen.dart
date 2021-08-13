@@ -1,12 +1,45 @@
-import 'package:flutter/material.dart';
+import 'package:clima/screens/city_screen.dart';
+import 'package:clima/services/weather.dart';
 import 'package:clima/utilities/constants.dart';
+import 'package:flutter/material.dart';
 
 class LocationScreen extends StatefulWidget {
+  LocationScreen({this.locationWeather});
+  final locationWeather;
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
+  int temp;
+  String tempMessage;
+  String weatherCondition;
+  String city;
+  WeatherModel weather = WeatherModel();
+  @override
+  void initState() {
+    super.initState();
+    updateUI(widget.locationWeather);
+  }
+
+  void updateUI(dynamic weatherData) {
+    setState(() {
+      if (weatherData == null) {
+        temp = 0;
+        weatherCondition = 'Error';
+        tempMessage = 'unable to get data';
+        city = '';
+      }
+      double temperature = weatherData['main']['temp'];
+      temp = temperature.toInt();
+      tempMessage = weather.getMessage(temp);
+      var condition = weatherData['weather'][0]['id'];
+      weatherCondition = weather.getWeatherIcon(condition);
+      city = weatherData['name'];
+      print(temp);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +49,7 @@ class _LocationScreenState extends State<LocationScreen> {
             image: AssetImage('images/location_background.jpg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.8), BlendMode.dstATop),
+                Colors.white.withOpacity(0.5), BlendMode.dstATop),
           ),
         ),
         constraints: BoxConstraints.expand(),
@@ -29,14 +62,30 @@ class _LocationScreenState extends State<LocationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      var weatherData = await weather.getweatherLocation();
+                      updateUI(weatherData);
+                    },
                     child: Icon(
-                      Icons.near_me,
+                      Icons.refresh,
                       size: 50.0,
                     ),
                   ),
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      var typedName =
+                          await Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return CityScreen();
+                        },
+                      ));
+                      print(typedName);
+                      if (typedName != null) {
+                        var weatherData =
+                            await weather.getcityWeather(typedName);
+                        updateUI(weatherData);
+                      }
+                    },
                     child: Icon(
                       Icons.location_city,
                       size: 50.0,
@@ -49,11 +98,11 @@ class _LocationScreenState extends State<LocationScreen> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '32°',
+                      '$temp°',
                       style: kTempTextStyle,
                     ),
                     Text(
-                      '☀️',
+                      '$weatherCondition️',
                       style: kConditionTextStyle,
                     ),
                   ],
@@ -62,7 +111,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's 🍦 time in San Francisco!",
+                  "$tempMessage  $city",
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),
