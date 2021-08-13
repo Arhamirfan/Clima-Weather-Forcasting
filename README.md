@@ -33,7 +33,7 @@ The objective of this tutorial is to learn about asynchronous programming in Dar
 -Get data from api:
 
 - const openweatherURL ='http://api.openweathermap.org/data/2.5/weather';
-- const apikey = 'b43ecf98b7c6f53ea26400846fb6ccf7';
+- const apikey = 'xx';
 
 - networkHelper networkhelper = networkHelper('$openweatherURL?lat=$latitude&lon=${longitude&appid=$apikey&units=metric');
 
