@@ -26,19 +26,18 @@ The objective of this tutorial is to learn about asynchronous programming in Dar
 
 -Get location:
 
-Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.low);
-var latitude = position.latitude;
-var longitude = position.longitude;
+- Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+- var latitude = position.latitude;
+- var longitude = position.longitude;
 
 -Get data from api:
 
-const openweatherURL ='http://api.openweathermap.org/data/2.5/weather';
-const apikey = 'b43ecf98b7c6f53ea26400846fb6ccf7';
+- const openweatherURL ='http://api.openweathermap.org/data/2.5/weather';
+- const apikey = 'b43ecf98b7c6f53ea26400846fb6ccf7';
 
-networkHelper networkhelper = networkHelper('$openweatherURL?lat=$latitude&lon=${longitude&appid=$apikey&units=metric');
+- networkHelper networkhelper = networkHelper('$openweatherURL?lat=$latitude&lon=${longitude&appid=$apikey&units=metric');
 
-access data:
-var weatherData = await networkhelper.getData();
-double temperature = weatherData['main']['temp'];
-var city = weatherData['name'];
+-access data:
+- var weatherData = await networkhelper.getData();
+- double temperature = weatherData['main']['temp'];
+- var city = weatherData['name'];
